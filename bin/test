@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd "$( dirname "$( realpath "$0" )" )/.."
+set -ex
+
+./vendor/phpunit/phpunit/phpunit

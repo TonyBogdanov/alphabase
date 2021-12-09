@@ -1,0 +1,31 @@
+{
+  "name": "tonybogdanov/alphabase",
+  "description": "Base-Anything conversions for PHP",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "TonyBogdanov\\Alphabase\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "TonyBogdanov\\Alphabase\\Tests\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Tony Bogdanov",
+      "email": "support@tonybogdanov.com"
+    }
+  ],
+  "require": {
+    "php-64bit": "^7.4",
+    "ext-bcmath": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "symfony/var-dumper": "^5.4"
+  }
+}

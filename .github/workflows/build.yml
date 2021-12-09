@@ -1,0 +1,96 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  delete-artifacts:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          expire-in: 10 minutes
+
+  test:
+    needs: [ delete-artifacts ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    env:
+      COMPOSER_ALLOW_SUPERUSER: '1'
+
+    steps:
+      - name: Checkout
+        if: "!contains(github.event.head_commit.message, '[no-test]')"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Setup PHP
+        if: "!contains(github.event.head_commit.message, '[no-test]')"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          ini-values: memory_limit=4G, variables_order=EGPCS
+          coverage: pcov
+
+      - name: Setup & run tests
+        if: "!contains(github.event.head_commit.message, '[no-test]')"
+        run: |
+          set -ex
+
+          composer install --prefer-dist -oa
+          ./bin/test-coverage
+
+      - name: Compress artifacts
+        if: "!contains(github.event.head_commit.message, '[no-test]')"
+        uses: TonyBogdanov/zip@1.0
+        with:
+          args: zip -qq -r ./coverage.zip ./coverage
+
+      - name: Upload artifacts
+        if: "!contains(github.event.head_commit.message, '[no-test]')"
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage.zip
+
+  coverage:
+    name: coverage
+
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/master' &&
+      !contains(github.event.head_commit.message, '[no-test]')
+
+    needs: [ test ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+
+      - name: Decompress artifacts
+        uses: TonyBogdanov/zip@1.0
+        with:
+          args: unzip -qq ./coverage.zip -d ./
+
+      - name: Build coverage
+        uses: tonybogdanov/coverage@master
+        with:
+          path: coverage
+
+      - name: Publish coverage results
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: coverage
