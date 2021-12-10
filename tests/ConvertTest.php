@@ -65,6 +65,15 @@ class ConvertTest extends TestCase {
      * @throws InvalidAlphabetException
      * @throws InvalidInputException
      */
+    public function testOnlyPaddingInput(): void {
+        $this->assertSame( 'qqq', Converter::convert( 'aaa', 'ab', 'qw' ) );
+    }
+
+    /**
+     * @return void
+     * @throws InvalidAlphabetException
+     * @throws InvalidInputException
+     */
     public function testNonUniqueCharactersInAlphabet(): void {
         $this->expectException( InvalidAlphabetException::class );
         Converter::convert( 'a', 'aab', 'ab' );

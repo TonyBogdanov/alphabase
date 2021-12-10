@@ -75,8 +75,11 @@ class Converter {
         $ob = count( $os );
 
         $carry = preg_match( '/^' . preg_quote( $is[0], '/' ) . '+/', $input, $match ) ? strlen( $match[0] ) : 0;
-        $value = '0';
+        if ( $carry === strlen( $input ) ) {
+            return str_repeat( $os[0], $carry );
+        }
 
+        $value = '0';
         foreach ( array_reverse( str_split( substr( $input, $carry ) ) ) as $index => $symbol ) {
             $value = bcadd( $value, bcmul( $isf[ $symbol ], bcpow( $ib, $index ) ) );
         }
