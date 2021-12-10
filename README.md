@@ -25,7 +25,7 @@ base32 into base64.
 Keep in mind that the conversions here have nothing to do with standard algorithms like `base64`, and so are not
 interchangeable.
 
-```
+```php
 // qett
 echo \TonyBogdanov\Alphabase\Converter::convert( 'abacab', 'abc', 'qwerty' );
 
