@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1639130065">
-  <project timestamp="1639130065">
+<coverage generated="1639130308">
+  <project timestamp="1639130308">
     <file name="/home/runner/work/alphabase/alphabase/src/Converter.php">
       <class name="TonyBogdanov\Alphabase\Converter" namespace="global">
         <metrics complexity="11" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="31" coveredstatements="31" elements="33" coveredelements="33"/>
